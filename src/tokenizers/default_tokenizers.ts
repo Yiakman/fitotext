@@ -44,7 +44,7 @@ export class ClassicTokenizer extends Tokenizer {
   }
 }
 
-export class timeTokenizer extends Tokenizer {
+export class TimeTokenizer extends Tokenizer {
   constructor() {
     const cT = new ClassicTokenizer(false);
     const timeRegex = /17:00\n8:00AM\n8:61\n08:59pm\n23:56\n12:35pm\n9am08am/g;
@@ -54,5 +54,36 @@ export class timeTokenizer extends Tokenizer {
         uncaptured: target.replace(timeRegex, '')
       }
     }, (target: string) => cT.simpleTokenize(target).filter(timeRegex.test));
+  }
+}
+
+export class DateTokenizer extends Tokenizer {
+  constructor() { // TODO: only format right now is dd/mm/yyyy
+    const dateRegex = /(?<![0-9a-zA-Z])(((3?[0-1])|([0-2]?[0-9]))\/((0?[0-9])|(1[0-2]))\/([0-9]{1,4}))/g
+    super((target: string) => {
+      return {
+        captured: target.match(dateRegex) || [],
+        uncaptured: target.replace(dateRegex, ''),
+      }
+    }, (target: string) => target.match(dateRegex) || []);
+  }
+}
+export class CSVTokenizer extends Tokenizer {
+  constructor() {
+    const csvRegex = /,\s*/g;
+    super((target: string) => {
+      return {
+        captured: target.split(csvRegex),
+        uncaptured: (csvRegex.test(target)) ? '' : target,
+      }
+    }, (target: string) => target.split(csvRegex));
+  }
+}
+export class RegexTokenizer extends Tokenizer {
+  constructor(regex: string | RegExp) {
+    const parsedRegex = typeof regex === 'string' ? regex : (new RegExp(regex.source, 'g')).source;
+    const regexTokenizer = tokenizerFuncFactory(parsedRegex);
+    const simpleRegextokenizer = tokenizerFuncSimpleFactory(parsedRegex);
+    super(regexTokenizer, simpleRegextokenizer);
   }
 }
