@@ -1,15 +1,11 @@
 import Filter from '../classes/Filter'
+import { filterFuncFactory } from '../classes/Filter'
 
 const possesivesRegex = "('s|(s|S)')";
 const acronymRegex = "((?<=(A-Za-z))(\.)(?=(A-Za-z)))";
 const bracketRegex = "[\(\)\[\]\{\}]";
 const bracketlessPunctuationRegex = "[^\w\s\(\)\[\]\{\}]";
 const punctuationRegex = "[^\w\s]";
-
-const filterFuncFactory = (...args: Array<string>) => (target: string) => {
-  const filterRegex = new RegExp(args.join('|'), 'g');
-  return target.replace(filterRegex, '');
-}
 
 class ClassicFilter extends Filter {
   constructor() {
@@ -37,9 +33,18 @@ class PunctuationFilter extends Filter {
   }
 };
 
+class RegexFilter extends Filter {
+  constructor(regex: string | RegExp) {
+    const parsedRegex = typeof regex === 'string' ? regex : (new RegExp(regex.source, 'g')).source;
+    const regexFilter = filterFuncFactory(parsedRegex);
+    super(regexFilter);
+  }
+}
+
 module.exports = {
   ClassicFilter,
   LowerCaseFilter,
   UpperCaseFilter,
-  PunctuationFilter
+  PunctuationFilter,
+  RegexFilter,
 }

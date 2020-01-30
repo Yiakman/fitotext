@@ -1,4 +1,4 @@
-interface IFilterFunc {
+export interface IFilterFunc {
   (target: string): string;
 }
 
@@ -11,4 +11,9 @@ export default class Filter {
   filter(target: string) {
     return this.filterFunc(target);
   }
+}
+
+export const filterFuncFactory = (...args: Array<string>) => (target: string) => {
+  const filterRegex = new RegExp(args.join('|'), 'g');
+  return target.replace(filterRegex, '');
 }
