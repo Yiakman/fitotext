@@ -1,18 +1,18 @@
 import Tokenizer from './Tokenizer';
 import Filter from './Filter';
 
-type CascadeProcessTypeSingle = 'single';
-type CascadeProcessTypeMulti = 'multi';
-interface ICascadeOutput<T extends CascadeProcessTypeSingle | CascadeProcessTypeMulti> {
-  processType: T,
-  result: T extends CascadeProcessTypeSingle ? string[] : string[][],
-  residual: string,
-}
+export type CascadeProcessTypeSingle = 'single';
+export type CascadeProcessTypeMulti = 'multi';
+export interface ICascadeOutput<T> {
+  processType: T;
+  result: string[] | string[][];
+  residual: string;
+};
 
-interface IFitoProcess {
-  process: string,
-  resultFilter?: string,
-}
+export interface IFitoProcess {
+  process: string;
+  resultFilter?: string;
+};
 export default class Cascade {
   protected processQueue: IFitoProcess[];
   protected processType: CascadeProcessTypeMulti | CascadeProcessTypeSingle;
@@ -27,18 +27,20 @@ export default class Cascade {
     return;
   }
   protected singleProcess(target: string) {
+    const result: string[] = [];
     const output: ICascadeOutput<'single'> = {
       processType: 'single',
-      result: [],
+      result,
       residual: '',
     } 
   }
   protected multiProcess(target: string) {
-    const output: ICascadeOutput<'single'> = {
-      processType: 'single',
-      result: [],
+    const result: string[][] = [];
+    const output: ICascadeOutput<'multi'> = {
+      processType: 'multi',
+      result,
       residual: '',
-    } 
+    }
   }
   public process(target: string) {
     if (this.processType === 'single') return this.singleProcess(target);
