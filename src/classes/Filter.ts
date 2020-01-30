@@ -3,7 +3,7 @@ export interface IFilterFunc {
 }
 
 export default class Filter {
-  filterFunc: IFilterFunc;
+  private filterFunc: IFilterFunc;
 
   constructor(filterFunc: IFilterFunc ) {
     this.filterFunc = filterFunc;

@@ -7,26 +7,26 @@ const bracketRegex = "[\(\)\[\]\{\}]";
 const bracketlessPunctuationRegex = "[^\w\s\(\)\[\]\{\}]";
 const punctuationRegex = "[^\w\s]";
 
-class ClassicFilter extends Filter {
+export class ClassicFilter extends Filter {
   constructor() {
     const classicFilter = filterFuncFactory(possesivesRegex, acronymRegex);
     super(classicFilter);
   }
 }
 
-class LowerCaseFilter extends Filter {
+export class LowerCaseFilter extends Filter {
   constructor() {
     super((target: string) => target.toLowerCase());
   }
 }
 
-class UpperCaseFilter extends Filter {
+export class UpperCaseFilter extends Filter {
   constructor() {
     super((target: string) => target.toUpperCase());
   }
 }
 
-class PunctuationFilter extends Filter {
+export class PunctuationFilter extends Filter {
   constructor(includeBrackets: boolean=true) {
     const punctuationFilter = filterFuncFactory((includeBrackets ? punctuationRegex : bracketlessPunctuationRegex));
     super(punctuationFilter);

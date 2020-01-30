@@ -12,8 +12,8 @@ export interface TokenizerFuncFactory { (regexString: string): TokenizerFunc };
 export interface TokenizerFuncSimpleFactory { (regexString: string): TokenizerFuncSimple };
 
 export default class Tokenizer {
-  tokenizerFunc: TokenizerFunc;
-  simpleTokenizerFunc?: TokenizerFuncSimple;
+  private tokenizerFunc: TokenizerFunc;
+  private simpleTokenizerFunc?: TokenizerFuncSimple;
 
   constructor(tokenizerFunc: TokenizerFunc, simpleTokenizerFunc?: TokenizerFuncSimple) {
     this.tokenizerFunc = tokenizerFunc;
@@ -23,7 +23,7 @@ export default class Tokenizer {
     return this.tokenizerFunc(target);
   }
   simpleTokenize(target: string) {
-    if (this.simpleTokenizerFunc) return this.simpleTokenizerFunc;
+    if (this.simpleTokenizerFunc) return this.simpleTokenizerFunc(target);
     throw 'simpleTokenize is not defined in this Tokenizer'
   }
 }
@@ -42,6 +42,7 @@ export const tokenizerFuncFactory: TokenizerFuncFactory =
 
 export const tokenizerFuncSimpleFactory: TokenizerFuncSimpleFactory = (regexString: string) => {
   const regex = new RegExp(regexString, 'g');
+  console.log(regex);
   return (target: string) => {
     const capturedTry = target.match(regex);
     return capturedTry || [];
